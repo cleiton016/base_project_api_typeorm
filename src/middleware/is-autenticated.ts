@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken'
 import { constants } from "../utils/constants";
 import { TokenData } from "../utils/types/token-data.type";
+import { BadRequestError } from "../utils/api-error";
 
 export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
     if (!constants.prod){
@@ -11,9 +12,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 
     const authToken = req.headers.authorization
     if (!authToken) {
-        return res.status(401).json({
-            msg: "Token não informado"
-        })
+        throw new BadRequestError("Token não informado")
     }
     
     const token = authToken.replace('Bearer ', '')
@@ -24,9 +23,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
         req.body.accountLogged = data.accountId
         return next()
     } catch (error) {
-        return res.status(401).json({
-            msg: "Token invalido"
-        })
+        throw new BadRequestError("Token invalido")
     }
 
 }
