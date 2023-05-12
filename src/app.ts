@@ -41,8 +41,10 @@ export class App {
   private router() {
     this.server.use(authUser)
     this.server.use('/account', AccountRouters)
-    // * Middleware de tratamento de erro
-    // ! Deixar sempre como a ultima rota 
+    /*
+    * Middleware de tratamento de erro
+    ! Deixar sempre como a ultima rota 
+    */
     this.server.use(TreatmentError)
   }
 }
