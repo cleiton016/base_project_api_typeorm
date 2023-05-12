@@ -1,24 +1,9 @@
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { EntityBase } from './entity-base'
 import { RoleEntity } from './role.entity'
+import { EntityBase } from './entity-base'
 
 @Entity('contas')
-export class AccountEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt!: Date
-
-  @Column({ name: 'ativo', type: 'boolean', nullable: false, default: true })
-  enable!: boolean
-
-  @Column({ name: 'last_updated_by_user' })
-  lastUpdatedByUser!: string
-
+export class AccountEntity extends EntityBase {
   @Column({ name: 'nome', nullable: false })
   name!: string
 
@@ -28,15 +13,14 @@ export class AccountEntity {
   @Column({ name: 'senha', nullable: false })
   password!: string
 
-  // @ManyToMany(() => RoleEntity)
-  // @JoinTable()
-  // roles!: RoleEntity[]
-  @Column({name: 'roles'})
-  roles!: string
+  @ManyToMany(() => RoleEntity)
+  @JoinTable()
+  roles!: RoleEntity[]
 
-  @Column({ type: 'timestamptz', name: 'data_expiracao_codigo', nullable: false })
+
+  @Column({ type: 'timestamptz', name: 'data_expiracao_codigo', nullable: true })
   expireCodeAt!: Date
 
-  @Column({ type: 'varchar', name: 'codigo_recuperacao', nullable: false })
+  @Column({ type: 'varchar', name: 'codigo_recuperacao', nullable: true})
   forgetCode!: string
 }

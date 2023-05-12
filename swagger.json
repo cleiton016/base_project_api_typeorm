@@ -1,0 +1,324 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Base API",
+      "description": "Base para densenvolvimento de novas apis",
+      "termsOfService": "http://localhost:3000/terms/",
+      "contact": {
+        "email": "cleitonluiz2014@gmail.com"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/"
+      },
+      {
+        "url": "http://192.168.100.9:3000/"
+      }
+
+    ],
+    "tags": [
+      {
+        "name": "Login",
+        "description": "Autenticação de usuario via jwt"
+      },
+      {
+        "name": "Account",
+        "description": "Cadastro de contas de usuario"
+      },
+      {
+        "name": "Roles",
+        "description": "Grupo de permissoes"
+      },
+      {
+        "name": "Premissões",
+        "description": "Cadastro de contas de usuario"
+      }
+    ],
+    "paths": {
+      "/login": {
+        "post":{
+          "tags":[
+            "Login"
+          ],
+          "summary": "Autenticação do usuario",
+          "requestBody": {
+            "description": "Informe os dados de login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Usuario autenticado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Login"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Login"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Dados invalidos"
+            }
+          }
+        }
+      },
+      "/account": {
+        "post": {
+          "tags": [
+            "Account"
+          ],
+          "security": [{"Bearer": []}],
+          "summary": "Cadastrar nova conta",
+          "description": "Registre novas contas de usuário",
+          "operationId": "createAccount",
+          "requestBody": {
+            "description": "Crie uma conta de usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Conta cadastrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado"
+            }
+          }
+        },
+        "get":{
+          "tags":[
+            "Account"
+          ],
+          "summary": "Lista todas as contas cadastradas",
+          "security": [{"Bearer": []}],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado"
+            }
+          }
+        }
+      },
+      "/account/{accountId}": {
+        "get": {
+          "tags":[
+            "Account"
+          ],
+          "summary": "Buscar conta por id",
+          "description": "Retorna uma conta",
+          "operationId": "getAccountById",
+          "security": [{"Bearer": []}],
+          "parameters": [
+            {
+              "name": "accountId",
+              "in": "path",
+              "description": "ID de conta",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Conta excluida com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Conta invalida"
+            },
+            "401": {
+              "description": "Não autorizado"
+            },
+            "404": {
+              "description": "Conta não encontrada"
+            }
+          }
+        },
+        "delete": {
+          "tags":[
+            "Account"
+          ],
+          "summary": "Excluir conta",
+          "description": "Remova uma conta por id",
+          "security": [{"Bearer": []}],
+          "parameters": [
+            {
+              "name": "accountId",
+              "in": "path",
+              "description": "ID de conta",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Conta invalida"
+            },
+            "401": {
+              "description": "Não autorizado"
+            },
+            "404": {
+              "description": "Conta não encontrada"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Account": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "format": "name",
+              "example": "fulano de tal"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "password": {
+              "type": "string",
+              "format": "password",
+              "example": "alskdjlaksj"
+            },
+            "roles": {
+              "type": "string",
+              "format": "json",
+              "example": [
+                "5dcd2965-9255-411f-961a-18dc5a360d75",
+                "2312312eas-dsd21-961a-18dc5a360d75"
+              ]
+            }
+          },
+          "xml": {
+            "name": "account"
+          }
+        },
+        "Login": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "dev@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "format": "password",
+              "example": "123456"
+            }
+          },
+          "xml": {
+            "name": "Login"
+          }
+        }
+
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "Authorization"
+        }
+      }
+    }
+  }

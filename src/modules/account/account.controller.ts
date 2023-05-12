@@ -1,55 +1,84 @@
 import { NextFunction, Request, Response } from "express"
-import { AccountEntity } from "../../database/entity/account.entity"
-import { AppDataSource } from "../../database/data-source"
+import { AccountRepository } from "../../database/repositories/account.repository"
 import { hash } from 'bcrypt'
+import { constants } from "../../utils/constants"
+import { BadRequestError, NotFoundError } from "../../utils/api-error"
 
 export class AccountController {
+    async all(req: Request, res: Response, next: NextFunction) { 
+        const data = await AccountRepository.find({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                roles: {
+                    id: true,
+                    name: true,
+                    permissions: {
+                        name: true
+                    }
+                }
+            },
+            relations:{
+                roles: {
+                    permissions: true
+                }
+            },
+            where: { enable: true }
 
-    private accountRepository = AppDataSource.getRepository(AccountEntity)
+        })
 
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.accountRepository.find()
+        return res.json(data)
     }
 
-    async one(request: Request, response: Response, next: NextFunction) {
-        const id = request.params.id
+    async one(req: Request, res: Response, next: NextFunction) {
+        const id = req.params.id
 
 
-        const account = await this.accountRepository.findOne({
+        const account = await AccountRepository.findOne({
             where: { id }
         })
 
         if (!account) {
-            return "unregistered account"
+            throw new NotFoundError("Conta não registrada")
         }
-        return account
+        return res.json(account)
     }
 
-    async save(request: Request, response: Response, next: NextFunction) {
-        const { name, email, password, roles } = request.body;
-        const passwordEncrypt = await hash(password, 10)
-        const account =  {
+    async save(req: Request, res: Response, next: NextFunction) {
+        const userLogged = req.body.accountLogged
+        const { name, email, roles } = req.body;
+        const password = await hash(req.body.password, constants.bcrypt.saltOrRounds!)
+        const alertExist = await AccountRepository.findOneBy({email})
+        if (alertExist) {
+            throw new BadRequestError("Email já cadastrado")
+        }
+        const account = AccountRepository.create({
             name,
             email,
-            password: passwordEncrypt,
-            roles
-        }
-
-        return this.accountRepository.save(account)
+            password,
+            roles,
+            lastUpdatedByUser: userLogged
+        })
+        console.log(account);
+        
+        return res.json(await AccountRepository.save(account))
     }
 
-    async remove(request: Request, response: Response, next: NextFunction) {
-        const id = request.params.id
+    async remove(req: Request, res: Response, next: NextFunction) {
+        const id = req.params.id
 
-        let accountToRemove = await this.accountRepository.findOneBy({ id })
+        let accountToRemove = await AccountRepository.findOneBy({ id })
 
         if (!accountToRemove) {
-            return "this account not exist"
+            throw new NotFoundError("Conta não registrada")
         }
 
-        await this.accountRepository.remove(accountToRemove)
+        await AccountRepository.remove(accountToRemove)
 
-        return "account has been removed"
+        return res.json({message:"Conta removida"})
     }
 
 }
+
+export const accountController = new AccountController()

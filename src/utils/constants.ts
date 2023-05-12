@@ -2,6 +2,9 @@ require('dotenv').config()
 
 export const constants = {
     prod: false,
+    bcrypt: {
+        saltOrRounds: 10
+    },
     database : {
         type: process.env.DB_TYPE,
         host: process.env.DB_HOST,
