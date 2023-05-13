@@ -55,7 +55,7 @@ export class AccountController {
 
 
         const account = await AccountRepository.findOne({
-            where: { id }
+            where: { id , enable: true}
         })
 
         if (!account) {
@@ -87,13 +87,13 @@ export class AccountController {
     async remove(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id
 
-        let accountToRemove = await AccountRepository.findOneBy({ id })
+        const accountToRemove = await AccountRepository.findOneBy({ id , enable: true})
 
         if (!accountToRemove) {
             throw new NotFoundError("Conta não registrada")
         }
 
-        await AccountRepository.remove(accountToRemove)
+        await AccountRepository.update(accountToRemove.id, { enable: false })
 
         return res.json({message:"Conta removida"})
     }
