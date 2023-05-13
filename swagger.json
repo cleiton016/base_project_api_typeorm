@@ -28,12 +28,12 @@
         "description": "Cadastro de contas de usuario"
       },
       {
-        "name": "Roles",
+        "name": "Role",
         "description": "Grupo de permissoes"
       },
       {
-        "name": "Premissões",
-        "description": "Cadastro de contas de usuario"
+        "name": "Permission",
+        "description": "Premissões de usuario"
       }
     ],
     "paths": {
@@ -263,7 +263,7 @@
       "/role": {
         "post": {
           "tags": [
-            "Roles"
+            "Role"
           ],
           "security": [{"Bearer": []}],
           "summary": "Cadastrar novo role",
@@ -313,7 +313,7 @@
         },
         "get":{
           "tags":[
-            "Roles"
+            "Role"
           ],
           "summary": "Lista todos os grupos cadastrados",
           "security": [{"Bearer": []}],
@@ -342,7 +342,7 @@
       "/role/{id}": {
         "delete": {
           "tags":[
-            "Roles"
+            "Role"
           ],
           "summary": "Excluir Papel",
           "description": "Remova um papel por id",
@@ -383,6 +383,133 @@
             },
             "404": {
               "description": "ROle não encontrado"
+            }
+          }
+        }
+      },
+      "/permission": {
+        "post": {
+          "tags": [
+            "Permission"
+          ],
+          "security": [{"Bearer": []}],
+          "summary": "Cadastrar Nova Permissão",
+          "description": "Informe o 'nome' e uma 'descrição' para cadastra uma nova permissão",
+          "operationId": "createAccount",
+          "requestBody": {
+            "description": "Crie uma permissão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionBody"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionBody"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Permission"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Permissão cadastrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PermissionReponse"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PermissionReponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado"
+            }
+          }
+        },
+        "get":{
+          "tags":[
+            "Permission"
+          ],
+          "summary": "Lista todos as permissões cadastradas",
+          "security": [{"Bearer": []}],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PermissionReponse"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PermissionReponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado"
+            }
+          }
+        }
+      },
+      "/permission/{id}": {
+        "delete": {
+          "tags":[
+            "Permission"
+          ],
+          "summary": "Excluir uma Permissão",
+          "description": "Remova uma permissão por id",
+          "security": [{"Bearer": []}],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID da permissão",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Permisão invalida"
+            },
+            "401": {
+              "description": "Não autorizado"
+            },
+            "404": {
+              "description": "Permissão não encontrada"
             }
           }
         }
@@ -458,7 +585,48 @@
             }
           },
           "xml": {
-            "name": "Login"
+            "name": "Role"
+          }
+        },
+        "PermissionBody": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "format": "string",
+              "example": "CREATE_ACCOUNT"
+            },
+            "description": {
+              "type": "string",
+              "format": "string",
+              "example": "Usuário pode cadastrar novas contas"
+            }
+          },
+          "xml": {
+            "name": "Permission"
+          }
+        },
+        "PermissionReponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "example": "8c441408-7c81-4063-8c73-5dbb69cb5015"
+            },
+            "name": {
+              "type": "string",
+              "format": "string",
+              "example": "CREATE_ACCOUNT"
+            },
+            "description": {
+              "type": "string",
+              "format": "string",
+              "example": "Usuário pode cadastrar novas contas"
+            }
+          },
+          "xml": {
+            "name": "Permission"
           }
         }
 
