@@ -259,6 +259,133 @@
             }
           }
         }
+      },
+      "/role": {
+        "post": {
+          "tags": [
+            "Roles"
+          ],
+          "security": [{"Bearer": []}],
+          "summary": "Cadastrar novo role",
+          "description": "Registre novos role d",
+          "operationId": "createAccount",
+          "requestBody": {
+            "description": "Crie um grupo de permissões",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Conta cadastrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado"
+            }
+          }
+        },
+        "get":{
+          "tags":[
+            "Roles"
+          ],
+          "summary": "Lista todos os grupos cadastrados",
+          "security": [{"Bearer": []}],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Não autorizado"
+            }
+          }
+        }
+      },
+      "/role/{id}": {
+        "delete": {
+          "tags":[
+            "Roles"
+          ],
+          "summary": "Excluir Papel",
+          "description": "Remova um papel por id",
+          "security": [{"Bearer": []}],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID do role",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Role invalida"
+            },
+            "401": {
+              "description": "Não autorizado"
+            },
+            "404": {
+              "description": "ROle não encontrado"
+            }
+          }
+        }
       }
     },
     "components": {
@@ -305,6 +432,29 @@
               "type": "string",
               "format": "password",
               "example": "123456"
+            }
+          },
+          "xml": {
+            "name": "Login"
+          }
+        },
+        "Role": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "format": "string",
+              "example": "ADMIN"
+            },
+            "description": {
+              "type": "string",
+              "format": "string",
+              "example": "Permite acesso a todas as funcionalidades da aplicação"
+            },
+            "permissions": {
+              "type": "array",
+              "format": "array",
+              "example": "[{id: 'string', name: 'string'}]"
             }
           },
           "xml": {

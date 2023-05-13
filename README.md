@@ -1,4 +1,4 @@
-# Awesome Project Build with TypeORM
+# Base project to start building APIs with express + typeorm
 
 Steps to run this project:
 
