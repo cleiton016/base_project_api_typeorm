@@ -7,46 +7,50 @@ export class RoleController {
     async all(req: Request, res: Response, next: NextFunction) { 
         const data = await RoleRepository.find({
             select:{
+                id: true,
                 name: true,
                 description: true,
                 permissions: {
+                    id: true,
                     name:true
                 }
             },
             relations: {
                 permissions: true
-            }
+            },
+            where: {enable: true}
         })
-
         return res.json(data)
     }
 
-    async one(req: Request, res: Response, next: NextFunction) {
-
-    }
-
     async save(req: Request, res: Response, next: NextFunction) {
-        const { name, description, accountLogged } = req.body
+        const { name, description, permissions, accountLogged } = req.body
+        const roleExist = await RoleRepository.findOneBy({name, enable: true})
+        if(roleExist){
+            throw new BadRequestError(`Já existe role com o nome '${name}'`)
+        }
         const role = RoleRepository.create({
             name,
             description,
+            permissions,
             lastUpdatedByUser: accountLogged
         })
 
-        return res.json(await RoleRepository.save(role))
+        return res.status(201).json(await RoleRepository.save(role))
 
     }
 
     async remove(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id
 
-        const role = await RoleRepository.findOneBy({id})
+        const role = await RoleRepository.findOneBy({id, enable: true})
 
         if (!role){
             throw new BadRequestError("Grupo não encontrado")            
         }
 
-        return res.json(await RoleRepository.remove(role))
+        await RoleRepository.update(role.id, {enable: false})
+        return res.json({message: 'Grupo exluido!'})
 
     }
 
