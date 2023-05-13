@@ -5,7 +5,7 @@ export namespace Account {
         email?: string
         enable?: boolean
         permissions?: string[]
-        role?: string
+        roles?: any[]
         createdAt?: Date
         updatedAt?: Date
       }
