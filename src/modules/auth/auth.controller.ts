@@ -12,7 +12,7 @@ export class AuthController {
     async login(req: Request, res: Response, next: NextFunction) {
         const { email, password } = req.body
 
-        const account = await AccountRepository.findOne(
+        const [account] = await AccountRepository.find(
             {
                 select: {
                     id: true,
