@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 export const constants = {
-    prod: false,
+    prod: true,
     bcrypt: {
         saltOrRounds: 10
     },
